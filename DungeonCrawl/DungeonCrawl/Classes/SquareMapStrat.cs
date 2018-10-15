@@ -29,15 +29,15 @@ namespace DungeonCrawl.Classes
                 {
                     if (x == 0 || x == _Width - 1)
                     {
-                        map.SetTileAt(new Tile(x, y, TileType.Wall, Color.Red));
+                        map.SetTileAt(new Tile(x, y, TileType.Wall));
                     }
                     else if (y == 0 || y == _Height - 1)
                     {
-                        map.SetTileAt(new Tile(x, y, TileType.Wall, Color.Red));
+                        map.SetTileAt(new Tile(x, y, TileType.Wall));
                     }
                     else
                     {
-                        map.SetTileAt(new Tile(x, y, TileType.Floor, Color.White));
+                        map.SetTileAt(new Tile(x, y, TileType.Floor));
                     }
                 }
             }

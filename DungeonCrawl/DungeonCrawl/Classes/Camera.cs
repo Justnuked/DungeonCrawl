@@ -109,11 +109,11 @@ namespace DungeonCrawl.Classes
 
         private Vector2 CenteredPosition(Tile tile, bool clampToMap = false)
         {
-            var cameraPosition = new Vector2(tile.X * 12,
-               tile.Y * 12);
+            var cameraPosition = new Vector2(tile.X * Game1.TILEMULTIPLIER,
+               tile.Y * Game1.TILEMULTIPLIER);
             var cameraCenteredOnTilePosition =
-               new Vector2(cameraPosition.X + 12 / 2,
-                   cameraPosition.Y + 12 / 2);
+               new Vector2(cameraPosition.X + Game1.TILEMULTIPLIER / 2,
+                   cameraPosition.Y + Game1.TILEMULTIPLIER / 2);
             if (clampToMap)
             {
                 return MapClampedPosition(cameraCenteredOnTilePosition);
@@ -126,9 +126,9 @@ namespace DungeonCrawl.Classes
         private Vector2 MapClampedPosition(Vector2 position)
         {
             var cameraMax = new Vector2(Game1.MAPWIDTH
-                * 12 -
+                * Game1.TILEMULTIPLIER -
                 (ViewportWidth / Zoom / 2),
-                Game1.MAPHEIGHT * 12 -
+                Game1.MAPHEIGHT * Game1.TILEMULTIPLIER -
                 (ViewportHeight / Zoom / 2));
 
             return Vector2.Clamp(position,

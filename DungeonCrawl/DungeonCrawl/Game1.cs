@@ -21,7 +21,9 @@ namespace DungeonCrawl
 
         public static int MAPWIDTH;
         public static int MAPHEIGHT;
+        public static int TILEMULTIPLIER = 38;
         public static readonly Camera camera = new Camera();
+        List<IMap> dungeon = new List<IMap>();
 
         public Game1()
         {
@@ -40,11 +42,20 @@ namespace DungeonCrawl
             // TODO: Add your initialization logic here
             MAPWIDTH = 100;
             MAPHEIGHT = 125;
-            IMapGenStrat<DungeonMap> strat = new RandomRoomMapStrat<DungeonMap>(MAPWIDTH, MAPHEIGHT, 125, 4, 26, 1);
-            map = strat.CreateMap();
+
+
+
+            for (int i = 0; i < 100; i++)
+            {
+                IMapGenStrat<DungeonMap> strat = new RandomRoomMapStrat<DungeonMap>(MAPWIDTH, MAPHEIGHT, 125, 4, 26, 1);
+                map = strat.CreateMap();
+                dungeon.Add(map);
+            }
+
+
             Tile temp = map.GetRandomWalkable();
 
-            p = new Player(temp.X, temp.Y);
+            p = new Player(temp.X, temp.Y, ref map);
             font = Content.Load<SpriteFont>("ASCII");
             inputState = new InputState();
             camera.ViewportWidth = graphics.GraphicsDevice.Viewport.Width;
@@ -112,7 +123,8 @@ namespace DungeonCrawl
 
             foreach (Tile t in map.GetAllTiles())
             {
-                spriteBatch.DrawString(font, t.Texture.ToString(), new Vector2(t.X * t.TileSize, t.Y * t.TileSize), t.color);
+                //spriteBatch.DrawString(font, t.Texture.ToString(), new Vector2(t.X * t.TileSize, t.Y * t.TileSize), t.color);
+                spriteBatch.Draw(Content.Load<Texture2D>("Tile"), new Vector2(t.X * t.TileSize, t.Y * t.TileSize), t.color);
             }
             p.Draw(spriteBatch, font);
             spriteBatch.End();

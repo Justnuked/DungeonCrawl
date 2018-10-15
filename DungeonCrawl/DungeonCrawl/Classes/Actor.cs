@@ -16,6 +16,7 @@ namespace DungeonCrawl.Classes
         public char sprite { get; set; }
         public int spriteSize { get; set; }
         public Color color { get; set; }
+        public IMap map { get; set; }
 
         public abstract void Draw(SpriteBatch spriteBatch, SpriteFont font);
         public abstract void Update(InputState inputState);

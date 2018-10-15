@@ -11,13 +11,14 @@ namespace DungeonCrawl.Classes
 {
     public class Player : Actor
     {
-        public Player(int X, int Y)
+        public Player(int X, int Y, ref IMap map)
         {
             this.X = X;
             this.Y = Y;
             this.sprite = '@';
             this.color = Color.White;
-            this.spriteSize = 12;
+            this.spriteSize = Game1.TILEMULTIPLIER;
+            this.map = map;
 
         }
 
@@ -35,19 +36,59 @@ namespace DungeonCrawl.Classes
         {
             if (inputState.IsLeft(PlayerIndex.One))
             {
-                X--;
+                if(map.GetTileAt(X - 1 , Y).IsWalkAble())
+                    X--;
             }
             else if (inputState.IsRight(PlayerIndex.One))
             {
-                X++;
+                if (map.GetTileAt(X + 1, Y).IsWalkAble())
+                    X++;
             }
             else if (inputState.IsUp(PlayerIndex.One))
             {
-                Y--;
+                if (map.GetTileAt(X, Y - 1).IsWalkAble())
+                    Y--;
             }
             else if (inputState.IsDown(PlayerIndex.One))
             {
-                Y++;
+                if (map.GetTileAt(X, Y + 1).IsWalkAble())
+                    Y++;
+            }
+            else if (inputState.IsDiagonalLeftUp(PlayerIndex.One))
+            {
+                if (map.GetTileAt(X - 1, Y - 1).IsWalkAble())
+                {
+                    Y--;
+                    X--;
+                }
+                   
+            }
+            else if (inputState.IsDiagonalLeftDown(PlayerIndex.One))
+            {
+                if (map.GetTileAt(X - 1, Y + 1).IsWalkAble())
+                {
+                    Y++;
+                    X--;
+                }
+
+            }
+            else if (inputState.IsDiagonalRightUp(PlayerIndex.One))
+            {
+                if (map.GetTileAt(X + 1, Y - 1).IsWalkAble())
+                {
+                    Y--;
+                    X++;
+                }
+
+            }
+            else if (inputState.IsDiagonalRightDown(PlayerIndex.One))
+            {
+                if (map.GetTileAt(X + 1, Y + 1).IsWalkAble())
+                {
+                    Y++;
+                    X++;
+                }
+
             }
         }
     }

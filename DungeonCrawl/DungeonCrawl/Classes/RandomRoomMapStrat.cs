@@ -37,7 +37,7 @@ namespace DungeonCrawl.Classes
             {
                 for (int y = 0; y < _Height; y++)
                 {
-                    map.SetTileAt(new Tile(x, y, TileType.Wall, Color.Red));
+                    map.SetTileAt(new Tile(x, y, TileType.Wall));
                 }
             }
 
@@ -77,7 +77,7 @@ namespace DungeonCrawl.Classes
                     for (int y = r.y_Pos; y < r.y_Pos + r.room_Height; y++)
                     {
 
-                        map.SetTileAt(new Tile(x, y, TileType.Floor, Color.White));
+                        map.SetTileAt(new Tile(x, y, TileType.Floor));
                     }
                 }
             }
@@ -115,7 +115,7 @@ namespace DungeonCrawl.Classes
         {
             for (int x = Math.Min(xStart, xEnd); x <= Math.Max(xStart, xEnd); x++)
             {
-                map.SetTileAt(new Tile(x, yPosition, TileType.Floor, Color.Blue));
+                map.SetTileAt(new Tile(x, yPosition, TileType.Floor));
             }
         }
 
@@ -123,7 +123,7 @@ namespace DungeonCrawl.Classes
         {
             for (int y = Math.Min(yStart, yEnd); y <= Math.Max(yStart, yEnd); y++)
             {
-                map.SetTileAt(new Tile(xPosition, y, TileType.Floor, Color.Blue));
+                map.SetTileAt(new Tile(xPosition, y, TileType.Floor));
             }
         }
     }

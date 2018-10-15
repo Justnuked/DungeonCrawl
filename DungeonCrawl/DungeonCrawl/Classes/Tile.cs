@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,21 +30,47 @@ namespace DungeonCrawl.Classes
 
         public int TileSize
         {
-            get { return 12; }
+            get { return Game1.TILEMULTIPLIER; }
         }
 
         public char Texture { get; private set; }
 
-        public Tile(int x, int y, TileType type, Color color)
+        public Tile(int x, int y, TileType type)
             : this()
         {
             X = x;
             Y = y;
             Type = type;
             Texture = SetChar();
-            this.color = color;
+            this.color = SetColor();
         }
 
+        public bool IsWalkAble()
+        {
+            if (this.Type != TileType.Floor)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private Color SetColor()
+        {
+            {
+                if (Type == TileType.Floor)
+                {
+                    return Color.White;
+                }
+
+                if (Type == TileType.Wall)
+                {
+                    return Color.Red;
+                }
+
+                return Color.AliceBlue;
+            }
+        }
 
         private char SetChar()
         {

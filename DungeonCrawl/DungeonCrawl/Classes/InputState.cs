@@ -198,7 +198,7 @@ namespace DungeonCrawl.Classes
         {
             PlayerIndex playerIndex;
 
-            return IsNewKeyPress(Keys.Left, controllingPlayer, out playerIndex) || IsNewButtonPress(Buttons.DPadLeft, controllingPlayer, out playerIndex)
+            return IsNewKeyPress(Keys.NumPad4, controllingPlayer, out playerIndex) || IsNewButtonPress(Buttons.DPadLeft, controllingPlayer, out playerIndex)
                    || IsNewButtonPress(Buttons.LeftThumbstickLeft, controllingPlayer, out playerIndex);
         }
 
@@ -206,7 +206,7 @@ namespace DungeonCrawl.Classes
         {
             PlayerIndex playerIndex;
 
-            return IsNewKeyPress(Keys.Right, controllingPlayer, out playerIndex) || IsNewButtonPress(Buttons.DPadRight, controllingPlayer, out playerIndex)
+            return IsNewKeyPress(Keys.NumPad6, controllingPlayer, out playerIndex) || IsNewButtonPress(Buttons.DPadRight, controllingPlayer, out playerIndex)
                    || IsNewButtonPress(Buttons.LeftThumbstickRight, controllingPlayer, out playerIndex);
         }
 
@@ -214,7 +214,38 @@ namespace DungeonCrawl.Classes
         {
             PlayerIndex playerIndex;
 
-            return IsNewKeyPress(Keys.Up, controllingPlayer, out playerIndex) || IsNewButtonPress(Buttons.DPadUp, controllingPlayer, out playerIndex)
+            return IsNewKeyPress(Keys.NumPad8, controllingPlayer, out playerIndex) || IsNewButtonPress(Buttons.DPadUp, controllingPlayer, out playerIndex)
+                   || IsNewButtonPress(Buttons.LeftThumbstickUp, controllingPlayer, out playerIndex);
+        }
+
+        public bool IsDiagonalLeftUp(PlayerIndex? controllingPlayer)
+        {
+            PlayerIndex playerIndex;
+
+            return IsNewKeyPress(Keys.NumPad7, controllingPlayer, out playerIndex) || IsNewButtonPress(Buttons.DPadUp, controllingPlayer, out playerIndex)
+                   || IsNewButtonPress(Buttons.LeftThumbstickUp, controllingPlayer, out playerIndex);
+        }
+
+        public bool IsDiagonalLeftDown(PlayerIndex? controllingPlayer)
+        {
+            PlayerIndex playerIndex;
+
+            return IsNewKeyPress(Keys.NumPad1, controllingPlayer, out playerIndex) || IsNewButtonPress(Buttons.DPadUp, controllingPlayer, out playerIndex)
+                   || IsNewButtonPress(Buttons.LeftThumbstickUp, controllingPlayer, out playerIndex);
+        }
+
+        public bool IsDiagonalRightUp(PlayerIndex? controllingPlayer)
+        {
+            PlayerIndex playerIndex;
+
+            return IsNewKeyPress(Keys.NumPad9, controllingPlayer, out playerIndex) || IsNewButtonPress(Buttons.DPadUp, controllingPlayer, out playerIndex)
+                   || IsNewButtonPress(Buttons.LeftThumbstickUp, controllingPlayer, out playerIndex);
+        }
+        public bool IsDiagonalRightDown(PlayerIndex? controllingPlayer)
+        {
+            PlayerIndex playerIndex;
+
+            return IsNewKeyPress(Keys.NumPad3, controllingPlayer, out playerIndex) || IsNewButtonPress(Buttons.DPadUp, controllingPlayer, out playerIndex)
                    || IsNewButtonPress(Buttons.LeftThumbstickUp, controllingPlayer, out playerIndex);
         }
 
@@ -222,7 +253,7 @@ namespace DungeonCrawl.Classes
         {
             PlayerIndex playerIndex;
 
-            return IsNewKeyPress(Keys.Down, controllingPlayer, out playerIndex) || IsNewButtonPress(Buttons.DPadDown, controllingPlayer, out playerIndex)
+            return IsNewKeyPress(Keys.NumPad2, controllingPlayer, out playerIndex) || IsNewButtonPress(Buttons.DPadDown, controllingPlayer, out playerIndex)
                    || IsNewButtonPress(Buttons.LeftThumbstickDown, controllingPlayer, out playerIndex);
         }
 
@@ -262,6 +293,12 @@ namespace DungeonCrawl.Classes
         {
             PlayerIndex playerIndex;
             return IsNewKeyPress(Keys.OemComma, controllingPlayer, out playerIndex);
+        }
+
+        public bool IncrementMapLayer(PlayerIndex? controllingPlayer)
+        {
+            PlayerIndex playerIndex;
+            return IsNewKeyPress(Keys.E, controllingPlayer, out playerIndex);
         }
     }
 }
