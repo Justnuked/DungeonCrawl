@@ -35,6 +35,38 @@ namespace DungeonCrawl.Classes
             return tiles[x, y];
         }
 
+        public Tile GetStartTile()
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                for (int y = 0; y < Height; y++)
+                {
+                    if (tiles[x, y].Type == TileType.Start)
+                    {
+                        return tiles[x, y];
+                    }
+                }
+            }
+
+            return new Tile();
+        }
+
+        public Tile GetEndTile()
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                for (int y = 0; y < Height; y++)
+                {
+                    if (tiles[x, y].Type == TileType.End)
+                    {
+                        return tiles[x, y];
+                    }
+                }
+            }
+
+            return new Tile();
+        }
+
 
         public void SetTileAt(Tile t)
         {

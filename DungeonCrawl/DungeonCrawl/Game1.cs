@@ -19,15 +19,22 @@ namespace DungeonCrawl
         Player p;
         InputState inputState;
 
+        Tile start;
+        Tile end;
+
         public static int MAPWIDTH;
         public static int MAPHEIGHT;
-        public static int TILEMULTIPLIER = 38;
+        public static int TILEMULTIPLIER = 32;
         public static readonly Camera camera = new Camera();
+        public static Dictionary<string, Texture2D> sprites;
         List<IMap> dungeon = new List<IMap>();
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferHeight = 1000;
+            graphics.PreferredBackBufferWidth = 1000;
+
             Content.RootDirectory = "Content";
         }
 
@@ -40,20 +47,16 @@ namespace DungeonCrawl
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            MAPWIDTH = 100;
-            MAPHEIGHT = 125;
-
-
-
-            for (int i = 0; i < 100; i++)
-            {
-                IMapGenStrat<DungeonMap> strat = new RandomRoomMapStrat<DungeonMap>(MAPWIDTH, MAPHEIGHT, 125, 4, 26, 1);
-                map = strat.CreateMap();
-                dungeon.Add(map);
-            }
+            MAPWIDTH = 25;
+            MAPHEIGHT = 25;
+            sprites = TextureLoader.LoadTextures<Texture2D>(Content, "Sprites");
+            IMapGenStrat<DungeonMap> strat = new RandomRoomMapStrat<DungeonMap>(MAPWIDTH, MAPHEIGHT, 20, 1, 3, 10);
+            map = strat.CreateMap();
+            
 
 
             Tile temp = map.GetRandomWalkable();
+
 
             p = new Player(temp.X, temp.Y, ref map);
             font = Content.Load<SpriteFont>("ASCII");
@@ -61,6 +64,9 @@ namespace DungeonCrawl
             camera.ViewportWidth = graphics.GraphicsDevice.Viewport.Width;
             camera.ViewportHeight = graphics.GraphicsDevice.Viewport.Height;
             camera.CenterOn(temp);
+
+            start = map.GetRandomWalkable();
+            end = map.GetRandomWalkable();
 
 
             base.Initialize();
@@ -77,6 +83,7 @@ namespace DungeonCrawl
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
 
             // TODO: use this.Content to load your game content here
         }
@@ -123,10 +130,25 @@ namespace DungeonCrawl
 
             foreach (Tile t in map.GetAllTiles())
             {
-                //spriteBatch.DrawString(font, t.Texture.ToString(), new Vector2(t.X * t.TileSize, t.Y * t.TileSize), t.color);
-                spriteBatch.Draw(Content.Load<Texture2D>("Tile"), new Vector2(t.X * t.TileSize, t.Y * t.TileSize), t.color);
+                if (t.Type == TileType.Floor)
+                {
+                    spriteBatch.Draw(t.texture2d, new Vector2(t.X * t.TileSize, t.Y * t.TileSize), t.color);
+                }
+                else if(t.Type == TileType.Wall)
+                {
+                    spriteBatch.Draw(t.texture2d, new Vector2(t.X * t.TileSize, t.Y * t.TileSize), t.color);
+                }
+                else if (t.Type == TileType.Start)
+                {
+                    spriteBatch.Draw(t.texture2d, new Vector2(t.X * t.TileSize, t.Y * t.TileSize), Color.Red);
+                }
+                else if (t.Type == TileType.End)
+                {
+                    spriteBatch.Draw(t.texture2d, new Vector2(t.X * t.TileSize, t.Y * t.TileSize), Color.Blue);
+                }
             }
-            p.Draw(spriteBatch, font);
+
+          //  p.Draw(Content, spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);

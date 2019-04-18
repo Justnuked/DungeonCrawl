@@ -51,6 +51,7 @@
     <Compile Include="Classes\RandomRoomMapStrat.cs" />
     <Compile Include="Classes\Room.cs" />
     <Compile Include="Classes\SquareMapStrat.cs" />
+    <Compile Include="Classes\TextureLoader.cs" />
     <Compile Include="Classes\Tile.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />

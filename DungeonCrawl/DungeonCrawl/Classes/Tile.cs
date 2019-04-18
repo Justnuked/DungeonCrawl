@@ -15,6 +15,8 @@ namespace DungeonCrawl.Classes
 
         Floor = 1,
         Wall = 2,
+        Start = 3,
+        End = 4
     }
 
     public struct Tile
@@ -22,7 +24,6 @@ namespace DungeonCrawl.Classes
         public TileType Type { get; set; }
 
         public int X { get; private set; }
-
 
         public int Y { get; private set; }
 
@@ -33,6 +34,8 @@ namespace DungeonCrawl.Classes
             get { return Game1.TILEMULTIPLIER; }
         }
 
+        public Texture2D texture2d {get;set;}
+
         public char Texture { get; private set; }
 
         public Tile(int x, int y, TileType type)
@@ -41,8 +44,24 @@ namespace DungeonCrawl.Classes
             X = x;
             Y = y;
             Type = type;
-            Texture = SetChar();
-            this.color = SetColor();
+            Init();
+        }
+
+        private void Init()
+        {
+            if (Type == TileType.Floor || Type ==  TileType.Start || Type == TileType.End)
+            {
+                this.texture2d = Game1.sprites["dirt0"];
+                this.Texture = '.';
+                this.color = Color.White;
+            }
+
+            if (Type == TileType.Wall)
+            {
+                this.texture2d = Game1.sprites["brick_gray0"];
+                this.Texture = 'X';
+                this.color = Color.Red;
+            }
         }
 
         public bool IsWalkAble()
@@ -53,38 +72,6 @@ namespace DungeonCrawl.Classes
             }
 
             return true;
-        }
-
-        private Color SetColor()
-        {
-            {
-                if (Type == TileType.Floor)
-                {
-                    return Color.White;
-                }
-
-                if (Type == TileType.Wall)
-                {
-                    return Color.Red;
-                }
-
-                return Color.AliceBlue;
-            }
-        }
-
-        private char SetChar()
-        {
-            if (Type == TileType.Floor)
-            {
-                return '.';
-            }
-
-            if (Type == TileType.Wall)
-            {
-                return 'x';
-            }
-
-            return ';';
         }
     }
 }

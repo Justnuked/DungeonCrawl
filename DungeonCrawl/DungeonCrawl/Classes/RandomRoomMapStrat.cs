@@ -106,6 +106,7 @@ namespace DungeonCrawl.Classes
                 }
             }
 
+            SetStartEndEndTile(map);
 
             return map;
 
@@ -125,6 +126,12 @@ namespace DungeonCrawl.Classes
             {
                 map.SetTileAt(new Tile(xPosition, y, TileType.Floor));
             }
+        }
+
+        private void SetStartEndEndTile(T map)
+        {
+            map.SetTileAt(new Tile(map.GetRandomWalkable().X, map.GetRandomWalkable().Y, TileType.Start));
+            map.SetTileAt(new Tile(map.GetRandomWalkable().X, map.GetRandomWalkable().Y, TileType.End));
         }
     }
 }

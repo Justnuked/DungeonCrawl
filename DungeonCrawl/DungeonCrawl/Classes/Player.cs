@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -22,9 +23,14 @@ namespace DungeonCrawl.Classes
 
         }
 
-        public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, SpriteFont font)
+        public override void Draw(SpriteBatch spriteBatch, SpriteFont font)
         {
             spriteBatch.DrawString(font, sprite.ToString(), new Vector2(X * this.spriteSize, Y * this.spriteSize), color);
+        }
+
+        public void Draw(ContentManager content, SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(Game1.sprites["player"], new Vector2(X * this.spriteSize, Y * this.spriteSize), color);
         }
 
         public Tile GetPlayerTile(IMap map)
