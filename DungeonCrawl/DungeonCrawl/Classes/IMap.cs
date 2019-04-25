@@ -14,6 +14,8 @@ namespace DungeonCrawl.Classes
         IEnumerable<Tile> GetAllTiles();
 
         Tile GetTileAt(int x, int y);
+        Tile GetStartTile();
+        Tile GetEndTile();
 
         void SetTiles(Tile[,] tiles);
         void SetTileAt(Tile t);

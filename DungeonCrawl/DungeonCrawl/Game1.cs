@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Diagnostics;
+using DungeonCrawl.Classes.GeneticPathfinding;
+using System;
 
 namespace DungeonCrawl
 {
@@ -18,6 +20,8 @@ namespace DungeonCrawl
         IMap map;
         Player p;
         InputState inputState;
+        public static Random r = new Random();
+        GenomeMutator mutator;
 
         Tile start;
         Tile end;
@@ -28,6 +32,8 @@ namespace DungeonCrawl
         public static readonly Camera camera = new Camera();
         public static Dictionary<string, Texture2D> sprites;
         List<IMap> dungeon = new List<IMap>();
+
+        List<Genome> genomes;
 
         public Game1()
         {
@@ -47,13 +53,23 @@ namespace DungeonCrawl
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            MAPWIDTH = 25;
-            MAPHEIGHT = 25;
+            MAPWIDTH = 40;
+            MAPHEIGHT = 40;
             sprites = TextureLoader.LoadTextures<Texture2D>(Content, "Sprites");
-            IMapGenStrat<DungeonMap> strat = new RandomRoomMapStrat<DungeonMap>(MAPWIDTH, MAPHEIGHT, 20, 1, 3, 10);
+            IMapGenStrat<DungeonMap> strat = new RandomRoomMapStrat<DungeonMap>(MAPWIDTH, MAPHEIGHT, 30, 1, 3, 10);
             map = strat.CreateMap();
-            
+            genomes = new List<Genome>();
+            mutator = new GenomeMutator();
 
+            for (int i = 0; i < 20; i++)
+            {
+                genomes.Add(new Genome(8000));
+            }
+
+            foreach (Genome g in genomes)
+            {
+               mutator.AddGenomeWalker(new GenomeWalker(map.GetStartTile().X, map.GetStartTile().Y, map, g));
+            }
 
             Tile temp = map.GetRandomWalkable();
 
@@ -68,11 +84,7 @@ namespace DungeonCrawl
             start = map.GetRandomWalkable();
             end = map.GetRandomWalkable();
 
-
             base.Initialize();
-
-
-
         }
 
         /// <summary>
@@ -109,8 +121,18 @@ namespace DungeonCrawl
             inputState.Update();
 
             camera.HandleInput(inputState, null);
-            p.Update(inputState);
-            camera.CenterOn(p.GetPlayerTile(map));
+
+            foreach (GenomeWalker walker in mutator.GetGenomeWalkers())
+            {
+                walker.Update(inputState);
+            }
+
+            if (inputState.IsDown(PlayerIndex.One))
+            {
+                mutator.Evolve();
+            }
+
+            //camera.CenterOn(p.GetPlayerTile(map));
 
             base.Update(gameTime);
         }
@@ -148,7 +170,12 @@ namespace DungeonCrawl
                 }
             }
 
-          //  p.Draw(Content, spriteBatch);
+            foreach (GenomeWalker walker in mutator.GetGenomeWalkers())
+            {
+                walker.Draw(Content, spriteBatch);
+            }
+
+
             spriteBatch.End();
 
             base.Draw(gameTime);

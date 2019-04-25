@@ -44,6 +44,9 @@
     <Compile Include="Classes\Actor.cs" />
     <Compile Include="Classes\Camera.cs" />
     <Compile Include="Classes\DungeonMap.cs" />
+    <Compile Include="Classes\GeneticPathfinding\Genome.cs" />
+    <Compile Include="Classes\GeneticPathfinding\GenomeMutator.cs" />
+    <Compile Include="Classes\GeneticPathfinding\GenomeWalker.cs" />
     <Compile Include="Classes\IMap.cs" />
     <Compile Include="Classes\IMapGenStrat.cs" />
     <Compile Include="Classes\InputState.cs" />

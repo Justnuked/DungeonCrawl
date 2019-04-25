@@ -12,7 +12,7 @@ namespace DungeonCrawl.Classes
         // Construct a new Camera class with standard zoom (no scaling)
         public Camera()
         {
-            Zoom = 1.0f;
+            Zoom = 0.5f;
         }
 
         // Centered Position of the Camera in pixels.
@@ -62,7 +62,7 @@ namespace DungeonCrawl.Classes
             Zoom += amount;
             if (Zoom < 0.25f)
             {
-                Zoom = 0.25f;
+                //Zoom = 0.25f;
             }
         }
 

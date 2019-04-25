@@ -66,7 +66,7 @@ namespace DungeonCrawl.Classes
 
         public bool IsWalkAble()
         {
-            if (this.Type != TileType.Floor)
+            if (this.Type == TileType.Wall)
             {
                 return false;
             }
