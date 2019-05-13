@@ -26,7 +26,7 @@ namespace DungeonCrawl.Classes.GeneticPathfinding
 
             for (int i = 0; i < length; i++)
             {
-                switch (Game1.r.Next(0, 5))
+                switch (Game1.r.Next(1, 5))
                 {
                     case 1:
                             genes += "00";
@@ -40,6 +40,9 @@ namespace DungeonCrawl.Classes.GeneticPathfinding
                     case 4:
                             genes += "11";
                             break;
+                    default:
+                        genes += "oops";
+                        break;
                 }
             }
         }

@@ -42,9 +42,15 @@ namespace DungeonCrawl.Classes.GeneticPathfinding
             return map.GetTileAt(X, Y);
         }
 
+        public void ResetPosition(IMap map)
+        {
+            this.X = map.GetStartTile().X;
+            this.Y = map.GetStartTile().Y;
+        }
+
         private void Walk()
         {
-            List<String> instructions = new List<String>();
+            List<string> instructions = new List<string>();
 
             List<Tile> walkedTiles = new List<Tile>();
 
@@ -52,6 +58,7 @@ namespace DungeonCrawl.Classes.GeneticPathfinding
             {
                 instructions.Add(genome.GetGenome().Substring(i, 2));
             }
+
 
             foreach (string s in instructions)
             {
@@ -61,53 +68,66 @@ namespace DungeonCrawl.Classes.GeneticPathfinding
                     case "00":
                         if (map.GetTileAt(X, Y - 1).IsWalkAble())
                             Y--;
+                        else
+                            score += 100;
                         break;
                     case "01":
                         if (map.GetTileAt(X + 1, Y).IsWalkAble())
                             X++;
+                        else
+                            score += 100;
                         break;
                     case "10":
                         if (map.GetTileAt(X, Y + 1).IsWalkAble())
                             Y++;
+                        else
+                            score += 100;
                         break;
                     case "11":
                         if (map.GetTileAt(X - 1, Y).IsWalkAble())
                             X--;
+                        else
+                            score += 100;
                         break;
 
                 }
             }
 
-            CalculateScore(walkedTiles);
+            this.score = CalculateScore(walkedTiles);
         }
 
-        private void CalculateScore(List<Tile> walkedTiles)
+        private int CalculateScore(List<Tile> walkedTiles)
         {
             Tile endTile = map.GetEndTile();
+            int score = 0;
 
-            //end not found bad route return max score
-            if(!walkedTiles.Contains(endTile)){
-                this.score = int.MaxValue;
-            }
-            else
+            //end not found bad route set max score
+            if(!walkedTiles.Contains(endTile))
             {
-                //Steps after the end is found are irrelevant, so cut them out of the genome
-                int index = walkedTiles.FindIndex(tile => tile.Type == TileType.End);
+                return int.MaxValue;
+            }
 
-                this.genome = new Genome(genome.GetGenome().Substring(0, (genome.GetGenome().Length / 2 - index)));
+            //Steps after the end is found are irrelevant, so cut them out of the genome
+            int index = walkedTiles.FindIndex(tile => tile.Type == TileType.End);
+
+            this.genome = new Genome(genome.GetGenome().Substring(0, index * 2));
 
 
-                //check for duplicate tiles in the walked tiles -- backtracking is never good
-                var query = walkedTiles.GroupBy(x => x)
-                  .Where(g => g.Count() > 1)
-                  .Select(y => new { Element = y.Key, Counter = y.Count() })
-                  .ToList();
+            //check for duplicate tiles in the walked tiles -- backtracking is never good
+            var query = walkedTiles.GroupBy(x => x)
+              .Where(g => g.Count() > 1)
+              .Select(y => new { Element = y.Key, Counter = y.Count() })
+              .ToList();
 
-                foreach (var element in query)
+            foreach (var element in query)
+            {
+                for (int i = 1; i < query.Count(); i++)
                 {
-                    score += (1 * element.Counter);
+                    score += i * element.Counter;
                 }
             }
+
+            return score;
         }
 
         public void Update(InputState inputState)

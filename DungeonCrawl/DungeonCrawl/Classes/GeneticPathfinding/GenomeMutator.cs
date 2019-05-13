@@ -53,8 +53,8 @@ namespace DungeonCrawl.Classes.GeneticPathfinding
 
             for (int i = 0; i < candidatesForEvolution.Count; i+=2)
             {
-                Genome first = candidatesForEvolution[i].GetGenome();
-                Genome second = candidatesForEvolution[i + 1].GetGenome();
+               // Genome first = candidatesForEvolution[i].GetGenome();
+                //Genome second = candidatesForEvolution[i + 1].GetGenome();
             }
 
             this.genomes = candidatesForEvolution;

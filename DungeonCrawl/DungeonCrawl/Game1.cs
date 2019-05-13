@@ -63,7 +63,7 @@ namespace DungeonCrawl
 
             for (int i = 0; i < 20; i++)
             {
-                genomes.Add(new Genome(8000));
+                genomes.Add(new Genome(5000));
             }
 
             foreach (Genome g in genomes)
@@ -95,6 +95,7 @@ namespace DungeonCrawl
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            font = Content.Load<SpriteFont>("ASCII");
 
 
             // TODO: use this.Content to load your game content here
@@ -127,6 +128,14 @@ namespace DungeonCrawl
                 walker.Update(inputState);
             }
 
+            if (inputState.IsRight(PlayerIndex.One))
+            {
+                foreach (GenomeWalker walker in mutator.GetGenomeWalkers())
+                {
+                    walker.ResetPosition(map);
+                }
+            }
+
             if (inputState.IsDown(PlayerIndex.One))
             {
                 mutator.Evolve();
@@ -147,7 +156,7 @@ namespace DungeonCrawl
 
             // TODO: Add your drawing code here
             // spriteBatch.Begin();
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend,
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,
              null, null, null, null, camera.TranslationMatrix);
 
             foreach (Tile t in map.GetAllTiles())
@@ -170,10 +179,21 @@ namespace DungeonCrawl
                 }
             }
 
+            int tempY = 100;
+            int genomeNumber = 1;
+
             foreach (GenomeWalker walker in mutator.GetGenomeWalkers())
             {
+               // int tempX = 100;
+
                 walker.Draw(Content, spriteBatch);
+                spriteBatch.DrawString(font, "Score genome " + genomeNumber + ": " + walker.GetScore() , new Vector2(100, tempY), Color.White);
+                genomeNumber++;
+                //tempX += 10;
+                tempY += 20;
             }
+
+
 
 
             spriteBatch.End();
