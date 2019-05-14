@@ -9,6 +9,13 @@ using System;
 
 namespace DungeonCrawl
 {
+
+    public enum GAMESTATE
+    {
+        PLAYING = 1,
+        PAUSED = 2,
+        WALKINGLASTOVER = 3
+    }
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
@@ -22,13 +29,17 @@ namespace DungeonCrawl
         InputState inputState;
         public static Random r = new Random();
         GenomeMutator mutator;
+        bool routeFound = false;
 
         Tile start;
         Tile end;
 
+        public static GAMESTATE state = GAMESTATE.PAUSED;
+        public static int ITERATIONS = 1;
         public static int MAPWIDTH;
         public static int MAPHEIGHT;
         public static int TILEMULTIPLIER = 32;
+        public static int POPULATION_SIZE = 20;
         public static readonly Camera camera = new Camera();
         public static Dictionary<string, Texture2D> sprites;
         List<IMap> dungeon = new List<IMap>();
@@ -61,14 +72,16 @@ namespace DungeonCrawl
             genomes = new List<Genome>();
             mutator = new GenomeMutator();
 
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < POPULATION_SIZE; i++)
             {
-                genomes.Add(new Genome(5000));
+                genomes.Add(new Genome(2500));
             }
 
+            int genomeNumber = 1;
             foreach (Genome g in genomes)
             {
-               mutator.AddGenomeWalker(new GenomeWalker(map.GetStartTile().X, map.GetStartTile().Y, map, g));
+                mutator.AddGenomeWalker(new GenomeWalker(map.GetStartTile().X, map.GetStartTile().Y, map, g, genomeNumber));
+                genomeNumber++;
             }
 
             Tile temp = map.GetRandomWalkable();
@@ -123,24 +136,45 @@ namespace DungeonCrawl
 
             camera.HandleInput(inputState, null);
 
-            foreach (GenomeWalker walker in mutator.GetGenomeWalkers())
+            if (state == GAMESTATE.PAUSED)
             {
-                walker.Update(inputState);
-            }
-
-            if (inputState.IsRight(PlayerIndex.One))
-            {
-                foreach (GenomeWalker walker in mutator.GetGenomeWalkers())
+                if (inputState.IsLeft(PlayerIndex.One))
                 {
-                    walker.ResetPosition(map);
+                    state = GAMESTATE.PLAYING;
                 }
             }
 
-            if (inputState.IsDown(PlayerIndex.One))
+            if (state == GAMESTATE.PLAYING)
             {
-                mutator.Evolve();
+                if (ITERATIONS < 200)
+                {
+
+                    foreach (GenomeWalker walker in mutator.GetGenomeWalkers())
+                    {
+                        walker.Update(inputState);
+                        walker.ResetPosition(map);
+                    }
+
+                    mutator.Evolve();
+
+                }
+                else
+                {
+                    state = GAMESTATE.WALKINGLASTOVER;
+                }
+
+                if (inputState.IsRight(PlayerIndex.One))
+                {
+                    state = GAMESTATE.PAUSED;
+                }
             }
 
+            if (state == GAMESTATE.WALKINGLASTOVER)
+            {
+                GenomeWalker best = mutator.GetBestWalker();
+
+                best.VictoryWalk();
+            }
             //camera.CenterOn(p.GetPlayerTile(map));
 
             base.Update(gameTime);
@@ -179,22 +213,20 @@ namespace DungeonCrawl
                 }
             }
 
-            int tempY = 100;
-            int genomeNumber = 1;
+            int scoreY = 100;
+            int debugY = 600;
 
             foreach (GenomeWalker walker in mutator.GetGenomeWalkers())
             {
-               // int tempX = 100;
 
                 walker.Draw(Content, spriteBatch);
-                spriteBatch.DrawString(font, "Score genome " + genomeNumber + ": " + walker.GetScore() , new Vector2(100, tempY), Color.White);
-                genomeNumber++;
-                //tempX += 10;
-                tempY += 20;
+                spriteBatch.DrawString(font, "End tile pos X " + map.GetEndTile().X + " Y" + map.GetEndTile().Y, new Vector2(100, 1380), Color.White);
+                spriteBatch.DrawString(font, "Iterations: " + ITERATIONS, new Vector2(100, 1410), Color.White);
+                spriteBatch.DrawString(font, "Score genome " + walker.GetGenomeNumber() + ": " + walker.GetScore() , new Vector2(1300, scoreY), Color.White);
+                //spriteBatch.DrawString(font, "Current Tile X" + walker.GetPlayerTile(map).X + " Y" + walker.GetPlayerTile(map).Y + " TileType " + walker.GetPlayerTile(map).Type , new Vector2(1500, debugY), Color.White);
+                scoreY += 25;
+                debugY += 25;
             }
-
-
-
 
             spriteBatch.End();
 

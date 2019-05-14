@@ -20,8 +20,10 @@ namespace DungeonCrawl.Classes.GeneticPathfinding
         private IMap map;
         private Genome genome;
         private int score;
+        private int genomeNumber;
+        private int posInList;
 
-        public GenomeWalker(int X, int Y, IMap map, Genome genome)
+        public GenomeWalker(int X, int Y, IMap map, Genome genome, int genomeNumber)
         {
             this.X = X;
             this.Y = Y;
@@ -29,6 +31,8 @@ namespace DungeonCrawl.Classes.GeneticPathfinding
             this.spriteSize = Game1.TILEMULTIPLIER;
             this.map = map;
             this.genome = genome;
+            this.genomeNumber = genomeNumber;
+            this.posInList = 0;
 
         }
 
@@ -48,8 +52,50 @@ namespace DungeonCrawl.Classes.GeneticPathfinding
             this.Y = map.GetStartTile().Y;
         }
 
+        public void VictoryWalk()
+        {
+            List<string> instructions = new List<string>();
+
+            for (int i = 0; i < genome.GetGenome().Length; i += 2)
+            {
+                instructions.Add(genome.GetGenome().Substring(i, 2));
+            }
+
+            switch (instructions[posInList])
+            {
+                case "00":
+                    if (map.GetTileAt(X, Y - 1).IsWalkAble())
+                        Y--;
+                    break;
+                case "01":
+                    if (map.GetTileAt(X + 1, Y).IsWalkAble())
+                        X++;
+                    break;
+                case "10":
+                    if (map.GetTileAt(X, Y + 1).IsWalkAble())
+                        Y++;
+                    break;
+                case "11":
+                    if (map.GetTileAt(X - 1, Y).IsWalkAble())
+                        X--;
+                    break;
+            }
+
+            if (posInList < instructions.Count)
+            {
+                posInList++;
+            }
+
+            if (posInList >= instructions.Count)
+            {
+                Game1.state = GAMESTATE.PAUSED;
+                return;
+            }
+        }
+
         private void Walk()
         {
+            score = 0;
             List<string> instructions = new List<string>();
 
             List<Tile> walkedTiles = new List<Tile>();
@@ -69,37 +115,43 @@ namespace DungeonCrawl.Classes.GeneticPathfinding
                         if (map.GetTileAt(X, Y - 1).IsWalkAble())
                             Y--;
                         else
-                            score += 100;
+                            score += 1;
                         break;
                     case "01":
                         if (map.GetTileAt(X + 1, Y).IsWalkAble())
                             X++;
                         else
-                            score += 100;
+                            score += 1;
                         break;
                     case "10":
                         if (map.GetTileAt(X, Y + 1).IsWalkAble())
                             Y++;
                         else
-                            score += 100;
+                            score += 1;
                         break;
                     case "11":
                         if (map.GetTileAt(X - 1, Y).IsWalkAble())
                             X--;
                         else
-                            score += 100;
+                            score += 1;
                         break;
 
                 }
             }
 
-            this.score = CalculateScore(walkedTiles);
+            walkedTiles.Add(map.GetTileAt(X, Y));
+
+            this.score += CalculateScore(walkedTiles);
+
+            if (score < 0)
+            {
+                score = int.MaxValue;
+            }
         }
 
         private int CalculateScore(List<Tile> walkedTiles)
         {
             Tile endTile = map.GetEndTile();
-            int score = 0;
 
             //end not found bad route set max score
             if(!walkedTiles.Contains(endTile))
@@ -121,7 +173,7 @@ namespace DungeonCrawl.Classes.GeneticPathfinding
 
             foreach (var element in query)
             {
-                for (int i = 1; i < query.Count(); i++)
+                for (int i = 0; i < query.Count; i++)
                 {
                     score += i * element.Counter;
                 }
@@ -132,10 +184,7 @@ namespace DungeonCrawl.Classes.GeneticPathfinding
 
         public void Update(InputState inputState)
         {
-            if (inputState.IsLeft(PlayerIndex.One))
-            {
-                Walk();
-            }
+            Walk();
         }
 
         public int GetScore()
@@ -151,6 +200,11 @@ namespace DungeonCrawl.Classes.GeneticPathfinding
         public void SetGenome(Genome genome)
         {
             this.genome = genome;
+        }
+
+        public int GetGenomeNumber()
+        {
+            return this.genomeNumber;
         }
     }
 }
