@@ -8,10 +8,9 @@ namespace DungeonCrawl.Classes.GeneticPathfinding
 {
     class GenomeMutator
     {
-        List<GenomeWalker> genomes;
-        Genome prevBest = null;
-        Genome prevSecBest = null;
-        int best = int.MaxValue;
+        private List<GenomeWalker> genomes;
+        private Genome prevBest = null;
+        private Genome prevSecBest = null;
 
         public GenomeMutator()
         {
@@ -33,28 +32,15 @@ namespace DungeonCrawl.Classes.GeneticPathfinding
             genomes = new List<GenomeWalker>();
         }
 
-        public List<int> GetScores()
-        {
-            List<int> scores = new List<int>();
-
-            foreach (GenomeWalker w in genomes)
-            {
-                scores.Add(w.GetScore());
-            }
-
-            return scores;
-        }
-
 
         public void Evolve()
         {
             Game1.ITERATIONS++;
             int bestScore = genomes.Min(e => e.GetScore());
-            best = bestScore;
 
             if (bestScore != int.MaxValue)
             {
-                Genome bestGenome = genomes.Where(g => g.GetScore() == bestScore).First().GetGenome();
+                Genome bestGenome = genomes.First(g => g.GetScore() == bestScore).GetGenome();
                 Genome secondBestGenome = genomes.Where(g => g.GetScore() > bestScore).OrderBy(g => g.GetScore()).First().GetGenome();
 
                 prevBest = bestGenome;
@@ -100,9 +86,17 @@ namespace DungeonCrawl.Classes.GeneticPathfinding
 
                 for (int i = 0; i < best.GetGenome().Length; i += 2)
                 {
-                    if (Game1.r.Next(0, 1000) % 2 == 0)
+                    int random = Game1.r.Next(1, 10000);
+                    if (random % 2 == 0)
                     {
-                        newGenome += best.GetGenome().Substring(i, 2); 
+                        if (random > 9750)
+                        {
+                            newGenome += "01";
+                        }
+                        else
+                        {
+                            newGenome += best.GetGenome().Substring(i, 2);
+                        }
                     }
                     else
                     {
@@ -112,14 +106,8 @@ namespace DungeonCrawl.Classes.GeneticPathfinding
                         }
                     }
                 }
-
                 walker.SetGenome(new Genome(newGenome));
             }
-        }
-
-        public int GetBestScore()
-        {
-            return this.best;
         }
     }
 }

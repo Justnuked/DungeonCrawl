@@ -39,7 +39,7 @@ namespace DungeonCrawl
         public static int MAPWIDTH;
         public static int MAPHEIGHT;
         public static int TILEMULTIPLIER = 32;
-        public static int POPULATION_SIZE = 20;
+        public static int POPULATION_SIZE = 45;
         public static readonly Camera camera = new Camera();
         public static Dictionary<string, Texture2D> sprites;
         List<IMap> dungeon = new List<IMap>();
@@ -173,7 +173,15 @@ namespace DungeonCrawl
             {
                 GenomeWalker best = mutator.GetBestWalker();
 
-                best.VictoryWalk();
+                if (best != null)
+                {
+                    best.VictoryWalk();
+                }
+                else
+                {
+                    state = GAMESTATE.PAUSED;
+                }
+
             }
             //camera.CenterOn(p.GetPlayerTile(map));
 
@@ -188,7 +196,6 @@ namespace DungeonCrawl
         {
             GraphicsDevice.Clear(Color.Black);
 
-            // TODO: Add your drawing code here
             // spriteBatch.Begin();
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend,
              null, null, null, null, camera.TranslationMatrix);

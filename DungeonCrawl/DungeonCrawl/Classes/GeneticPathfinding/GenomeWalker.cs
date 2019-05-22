@@ -81,15 +81,14 @@ namespace DungeonCrawl.Classes.GeneticPathfinding
                     break;
             }
 
-            if (posInList < instructions.Count)
-            {
-                posInList++;
-            }
-
-            if (posInList >= instructions.Count)
+            if (posInList == instructions.Count - 1)
             {
                 Game1.state = GAMESTATE.PAUSED;
-                return;
+            }
+
+            if (posInList < instructions.Count - 1)
+            {
+                posInList++;
             }
         }
 
@@ -115,25 +114,25 @@ namespace DungeonCrawl.Classes.GeneticPathfinding
                         if (map.GetTileAt(X, Y - 1).IsWalkAble())
                             Y--;
                         else
-                            score += 1;
+                            score += 2;
                         break;
                     case "01":
                         if (map.GetTileAt(X + 1, Y).IsWalkAble())
                             X++;
                         else
-                            score += 1;
+                            score += 2;
                         break;
                     case "10":
                         if (map.GetTileAt(X, Y + 1).IsWalkAble())
                             Y++;
                         else
-                            score += 1;
+                            score += 2;
                         break;
                     case "11":
                         if (map.GetTileAt(X - 1, Y).IsWalkAble())
                             X--;
                         else
-                            score += 1;
+                            score += 2;
                         break;
 
                 }
@@ -142,6 +141,7 @@ namespace DungeonCrawl.Classes.GeneticPathfinding
             walkedTiles.Add(map.GetTileAt(X, Y));
 
             this.score += CalculateScore(walkedTiles);
+            this.score += walkedTiles.Count;
 
             if (score < 0)
             {
@@ -173,7 +173,7 @@ namespace DungeonCrawl.Classes.GeneticPathfinding
 
             foreach (var element in query)
             {
-                for (int i = 0; i < query.Count; i++)
+                for (int i = 0; i < element.Counter; i++)
                 {
                     score += i * element.Counter;
                 }
